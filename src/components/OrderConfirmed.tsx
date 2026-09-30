@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import { CartItem, CustomerInfo, InvoiceInfo } from '../types';
 import { formatBoxCount, formatCLP } from '../utils/format';
-import { generateWhatsAppMessage, getWhatsAppUrl, getWaMeUrl, JOLY_WHATSAPP_DISPLAY } from '../utils/whatsapp';
-import { CheckCircle2, MessageCircle, Copy, Check, PlusCircle, ExternalLink } from 'lucide-react';
+import {
+  generateWhatsAppMessage,
+  getWhatsAppUrl,
+  getWaMeUrl,
+  JOLY_WHATSAPP_DISPLAY,
+  getOrCreateOrderNumber,
+  getChileanDateTimeString,
+  resetOrderSession,
+} from '../utils/whatsapp';
+import { CheckCircle2, MessageCircle, Copy, Check, PlusCircle, ExternalLink, Calendar, Clock, Hash } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 
 interface OrderConfirmedProps {
@@ -19,6 +27,8 @@ export function OrderConfirmed({
   onNewOrder,
 }: OrderConfirmedProps) {
   const [copied, setCopied] = useState(false);
+  const orderNumber = getOrCreateOrderNumber();
+  const { date, time } = getChileanDateTimeString();
 
   const totalBoxes = cart.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cart.reduce(
@@ -26,7 +36,7 @@ export function OrderConfirmed({
     0
   );
 
-  const message = generateWhatsAppMessage(cart, customer, invoice);
+  const message = generateWhatsAppMessage(cart, customer, invoice, orderNumber);
   const whatsappUrl = getWhatsAppUrl(message);
   const waMeUrl = getWaMeUrl(message);
 
@@ -40,6 +50,11 @@ export function OrderConfirmed({
     }
   };
 
+  const handleReset = () => {
+    resetOrderSession();
+    onNewOrder();
+  };
+
   return (
     <div className="max-w-xl mx-auto px-4 py-8 pb-28 text-center">
       {/* Brand Header */}
@@ -48,6 +63,11 @@ export function OrderConfirmed({
       {/* Success Icon */}
       <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-100 shadow-xs">
         <CheckCircle2 className="w-9 h-9" />
+      </div>
+
+      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-50 border border-sky-200 text-sky-800 text-xs font-bold rounded-full mb-3">
+        <Hash className="w-3.5 h-3.5 text-[#28AEE4]" />
+        <span>Pedido Registrado: {orderNumber}</span>
       </div>
 
       <h1 className="font-heading text-2xl sm:text-3xl font-black text-slate-900">
@@ -72,6 +92,19 @@ export function OrderConfirmed({
           <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
             Listo para enviar
           </span>
+        </div>
+
+        {/* Date and Time tracker banner */}
+        <div className="flex flex-wrap items-center gap-3 text-xs bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-slate-700">
+          <div className="flex items-center gap-1.5 font-medium">
+            <Calendar className="w-3.5 h-3.5 text-[#28AEE4]" />
+            <span>Fecha: <strong>{date}</strong></span>
+          </div>
+          <span className="text-slate-300">·</span>
+          <div className="flex items-center gap-1.5 font-medium">
+            <Clock className="w-3.5 h-3.5 text-[#28AEE4]" />
+            <span>Hora: <strong>{time}</strong></span>
+          </div>
         </div>
 
         <div className="text-xs text-slate-600 space-y-1">
@@ -139,7 +172,7 @@ export function OrderConfirmed({
       {/* Start New Order */}
       <button
         type="button"
-        onClick={onNewOrder}
+        onClick={handleReset}
         className="inline-flex items-center gap-2 text-xs font-semibold text-[#28AEE4] hover:text-[#209bcc] hover:underline cursor-pointer"
       >
         <PlusCircle className="w-4 h-4" />

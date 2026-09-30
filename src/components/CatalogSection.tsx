@@ -56,14 +56,14 @@ export function CatalogSection({
                     Despacho Tempranito
                   </span>
                   <span className="text-xs font-bold text-amber-200">
-                    ¡A ponerse las pilas compradores!
+                    Catálogo Mayorista Oficial
                   </span>
                 </div>
                 <h2 className="text-base sm:text-lg font-black text-white mt-1 leading-snug">
-                  ¡Haga su pedido antes de las 11:00 de la mañana!
+                  ¡Hola! Ya tenemos disponible nuestro catálogo mayorista online con despacho tempranito
                 </h2>
                 <p className="text-xs text-rose-100 mt-0.5">
-                  Así sale en el primer camión de reparto y le llega tempranito directo a su local.
+                  Haz tu pedido aquí antes de las <strong>11:00 AM</strong> para que salga en el primer camión de reparto y le llegue tempranito directo a su local.
                 </p>
               </div>
             </div>

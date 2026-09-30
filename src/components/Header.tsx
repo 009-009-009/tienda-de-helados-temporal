@@ -24,13 +24,17 @@ export function Header({
   const isCatalog = currentStep === 'catalog';
   const [copiedLink, setCopiedLink] = useState(false);
 
+  const shareText = `¡Hola! Ya tenemos disponible nuestro catálogo mayorista online con despacho tempranito.\n\nHaz tu pedido aquí antes de las 11:00 AM 👇`;
+
   const handleShare = async () => {
     const url = window.location.href;
+    const fullMessage = `${shareText}\n${url}`;
+
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Catálogo Helados JOLY & PANDA',
-          text: '¡Haz tu pedido mayorista antes de las 11:00 AM para despacho hoy!',
+          title: 'Catálogo Mayorista Helados JOLY & PANDA',
+          text: fullMessage,
           url,
         });
         return;
@@ -40,7 +44,7 @@ export function Header({
     }
 
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(fullMessage);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 3000);
     } catch {
@@ -51,10 +55,10 @@ export function Header({
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-900/10 shadow-xs">
       {/* 11:00 AM Dispatch Alert Top Ticker */}
-      <div className="bg-slate-950 text-white text-[11px] sm:text-xs py-1 px-3 font-medium text-center tracking-tight flex items-center justify-center gap-2">
+      <div className="bg-slate-950 text-white text-[11px] sm:text-xs py-1.5 px-3 font-medium text-center tracking-tight flex items-center justify-center gap-2">
         <span className="w-2 h-2 rounded-full bg-[#EEFF00] shrink-0 animate-pulse" />
         <span className="truncate">
-          ⏰ <strong className="text-[#EEFF00] font-bold">¡Haga su pedido antes de las 11:00 AM</strong> para despacho tempranito el mismo día! · <strong>HELADOS PANDA & JOLY</strong>
+          🍦 <strong>Catálogo mayorista online con despacho tempranito</strong> · ¡Haz tu pedido antes de las <span className="text-[#EEFF00] font-bold">11:00 AM</span>!
         </span>
       </div>
 
